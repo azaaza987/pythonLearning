@@ -1,5 +1,4 @@
-###É¨Ãè±¾µØÒôÀÖÎÄ¼ş.²¢½«¸è´ÊÇ¶Èëµ½ÒôÀÖÎÄ¼ş±êÇ©ÖĞ
-
+# -*- coding: utf-8 -*-
 import threading
 import time
 import datetime
@@ -10,6 +9,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
+###æŒ‡å®šéŸ³ä¹æ–‡ä»¶çš„è·¯å¾„å’Œæ­Œè¯çš„è·¯å¾„.ç„¶åå°†æ­Œè¯åµŒå…¥åˆ°éŸ³ä¹æ ‡ç­¾ä¸­
 
 def getstr(i):
     if i <10:

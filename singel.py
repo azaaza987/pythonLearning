@@ -1,4 +1,5 @@
-###Ö¸¶¨ÒôÀÖÎÄ¼şµÄÂ·¾¶ºÍ¸è´ÊµÄÂ·¾¶.È»ºó½«¸è´ÊÇ¶Èëµ½ÒôÀÖ±êÇ©ÖĞ
+# -*- coding: utf-8 -*-
+
 import threading
 import time
 import datetime
@@ -9,6 +10,9 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
+
+
+###æŒ‡å®šéŸ³ä¹æ–‡ä»¶çš„è·¯å¾„å’Œæ­Œè¯çš„è·¯å¾„.ç„¶åå°†æ­Œè¯åµŒå…¥åˆ°éŸ³ä¹æ ‡ç­¾ä¸­
 
 def getstr(i):
     if i <10:
@@ -91,7 +95,7 @@ def dealmusic(path):
     the_title = the_music.tag._getTitle()
     #print the_title
     #lrc=getlrc(the_title)
-    lrc=r"E:\lrc\´íµÄÈË.lrc"
+    lrc=r"E:\lrc\é”™çš„äºº.lrc"
     
     lrcstr=getlrcstr(lrc)
     writetag(path, lrcstr)    
