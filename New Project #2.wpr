@@ -4,9 +4,9 @@
 # Wing IDE project file                                          #
 ##################################################################
 [project attributes]
-proj.file-list = [loc('1.py'),
-                  loc('computer.py'),
+proj.file-list = [loc('computer.py'),
                   loc('README.md'),
                   loc('search_fold.py'),
-                  loc('singel.py')]
+                  loc('singel.py'),
+                  loc('twisted.py')]
 proj.file-type = 'shared'
