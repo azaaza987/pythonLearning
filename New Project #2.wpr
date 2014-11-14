@@ -5,6 +5,7 @@
 ##################################################################
 [project attributes]
 proj.file-list = [loc('1.py'),
+                  loc('computer.py'),
                   loc('README.md'),
                   loc('search_fold.py'),
                   loc('singel.py')]
