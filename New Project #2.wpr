@@ -5,7 +5,11 @@
 ##################################################################
 [project attributes]
 proj.file-list = [loc('computer.py'),
+                  loc('getimg.py'),
+                  loc('python_asp.py'),
                   loc('README.md'),
+                  loc('route.py'),
+                  loc('sae.py'),
                   loc('search_fold.py'),
                   loc('singel.py'),
                   loc('twisted.py')]
