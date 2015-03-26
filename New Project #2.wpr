@@ -4,7 +4,9 @@
 # Wing IDE project file                                          #
 ##################################################################
 [project attributes]
-proj.file-list = [loc('computer.py'),
+proj.file-list = [loc('camclient.py'),
+                  loc('camserver.py'),
+                  loc('computer.py'),
                   loc('getimg.py'),
                   loc('getlrc.py'),
                   loc('python_asp.py'),
