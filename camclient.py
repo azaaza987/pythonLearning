@@ -23,7 +23,6 @@ while 1:
     except socket.timeout:
         continue
 
-# 此句无用。。防止窗口初始化后等待数据
 cli_socket.recvfrom(65536)
 
 # 初始化视频窗口
