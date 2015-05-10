@@ -1,4 +1,5 @@
 #扫描本地音乐 从百度下载歌词到本地
+
 import os
 import os.path
 import re
@@ -12,8 +13,9 @@ import os
 reload(sys) 
 sys.setdefaultencoding('utf8')
 
-music_path = r"F:\CloudMusic"
-lrc_path = r"e:\lrc333"
+#music_path = r"F:\CloudMusic"
+music_path=r'e:\music'
+lrc_path = r"e:\lrc"
 
 #os.remove('nolrc.txt')
 #os.remove('lrcxml.txt')
