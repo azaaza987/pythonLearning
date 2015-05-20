@@ -1,4 +1,6 @@
-#扫描本地音乐 从百度下载歌词到本地
+# -*- coding: utf-8 -*-
+
+#鎵弿鏈湴闊充箰 浠庣櫨搴︿笅杞芥瓕璇嶅埌鏈湴
 
 import os
 import os.path
@@ -21,7 +23,7 @@ lrc_path = r"e:\lrc"
 #os.remove('lrcxml.txt')
 
 the_file = open('lrcxml.txt','a')
-nolrc_file = open('nolrc111.txt','a')
+nolrc_file = open('nolrc.txt','a')
 
 for root,dirs,files in os.walk(music_path):
     for filepath in files:

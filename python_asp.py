@@ -1,4 +1,7 @@
-#pythonµÇÂ½aspÍøÕ¾Ò³Ãæ
+# -*- coding: UTF-8 -*-
+
+
+#python ç™»å½•aspç½‘ç«™
 #blog http://www.lylinux.org/python%E7%99%BB%E9%99%86asp%E9%A1%B5%E9%9D%A2.html
 #coding=utf-8
 import urllib2
@@ -10,7 +13,7 @@ import httplib
 import time
  
  
-loginUrl="µÇÂ¼µØÖ·"
+loginUrl="ç™»å½•åœ°å€"
 headers={"User-Agent":"Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.120 Safari/537.36"}
 studentCookie = cookielib.CookieJar() 
 pageOpener = urllib2.build_opener(urllib2.HTTPCookieProcessor(studentCookie))
@@ -53,7 +56,7 @@ loginResponse = pageOpener.open(loginRequest)
  
 print loginResponse
  
-theurl='µÇÂ¼ºóËÑË÷Ò³ÃæµØÖ·'
+theurl='ç™»å½•åè¦è®¿é—®çš„åœ°å€'
  
 mainPageRequest = urllib2.Request(theurl)
  

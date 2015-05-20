@@ -1,4 +1,6 @@
-#Ê¹ÓÃsaeµÄstorage·şÎñÀ´×Ô¶¯±£´æÊı¾İ¿âÎÄ¼ş
+# -*- coding: UTF-8 -*-
+
+#ä½¿ç”¨saeçš„storageæœåŠ¡æ¥è‡ªåŠ¨ä¿å­˜æ•°æ®åº“æ–‡ä»¶
 import sae
 from sae.storage import Bucket
 import urllib2
@@ -10,11 +12,11 @@ import base64
  
  
 correct_time = time.strftime('%m_%d_%H_%M_%S',time.localtime(time.time()))
-url = "xxxxxxxxxxxxx"Õâ¸öĞŞ¸Ä³ÉÄãµÄÊı¾İ¿âÎÄ¼şµÄµØÖ·
+url = "xxxxxxxxxxxxx" #è¿™ä¸ªä¿®æ”¹æˆä½ çš„æ•°æ®åº“æ–‡ä»¶çš„åœ°å€
  
 def send_email(file_url):
     smtpserver = 'smtp.gmail.com'
-    #Õâ¶ù´ó¼Ò¶¼ÄÜ¿´¶®°É,ĞŞ¸Ä³ÉÄã×Ô¼ºµÄ.
+    #è¿™å„¿å¤§å®¶éƒ½èƒ½çœ‹æ‡‚å§,ä¿®æ”¹æˆä½ è‡ªå·±çš„.
     username = 'ooooooo'
     password = 'xxxxxxxxxx'
     from_addr = 'ffffffff@gmail.com'
@@ -34,7 +36,7 @@ def send_email(file_url):
     sm.quit() 
  
 def checktest():
-    bucket = Bucket('sssssss') #ĞŞ¸Ä³ÉÄã×Ô¼ºµÄstorageÃû
+    bucket = Bucket('sssssss')  #ä¿®æ”¹æˆä½ è‡ªå·±çš„storageås
     bucket.put()
     bucket.post(acl='.r:.sinaapp.com,.r:sae.sina.com.cn', metadata={'expires': '1d'})
     f = urllib2.urlopen(url)

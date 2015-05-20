@@ -1,4 +1,6 @@
-#¶àÏß³Ì±©Á¦ÆÆ½âÂ·ÓÉÆ÷
+# -*- coding: UTF-8 -*-
+
+#ï¿½ï¿½ï¿½ß³Ì±ï¿½ï¿½ï¿½ï¿½Æ½ï¿½Â·ï¿½ï¿½ï¿½ï¿½
 import urllib2
 import base64
 import urllib
@@ -30,7 +32,7 @@ def dosomething(password):
         'Language_set':'Chinese',
         'username':'admin',
         'password':password,
-        'login':'µÇÂ¼'
+        'login':'ï¿½ï¿½Â¼'
 }   
     #print password
     postdata=urllib.urlencode(postData)

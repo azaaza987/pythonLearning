@@ -1,5 +1,8 @@
-##Ô¶³Ì¿ØÖÆµçÄÔ²¢¹Ø»ú
-##²©¿ÍµØÖ·:http://www.lylinux.org/python%E8%BF%9C%E7%A8%8B%E7%9B%91%E6%8E%A7%E7%94%B5%E8%84%91%E5%B9%B6%E5%85%B3%E6%9C%BA.html
+# -*- coding: UTF-8 -*-
+##è¿œç¨‹æ§åˆ¶ç”µè„‘å¹¶å…³æœº
+
+##åšå®¢åœ°å€:http://www.lylinux.org/python%E8%BF%9C%E7%A8%8B%E7%9B%91%E6%8E%A7%E7%94%B5%E8%84%91%E5%B9%B6%E5%85%B3%E6%9C%BA.html
+
 import time
 from VideoCapture import Device
 from email.mime.text import MIMEText

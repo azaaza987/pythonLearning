@@ -1,3 +1,5 @@
+# -*- coding: UTF-8 -*-
+
 from VideoCapture import Device
 import ImageDraw, sys, pygame, time
 from pygame.locals import *
@@ -10,21 +12,20 @@ import threading
 
 
 
-
-# È«¾Ö±äÁ¿
+# å…¨å±€å˜é‡
 is_sending = False
 cli_address = ('', 0)
 
-# Ö÷»úµØÖ·ºÍ¶Ë¿Ú
+# ä¸»æœºåœ°å€å’Œç«¯å£
 host = 'localhost'
 port = 10218
 
-# ³õÊ¼»¯UDP socket
+# åˆå§‹åŒ–UDP socket
 ser_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 ser_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 ser_socket.bind((host, port))
 
-# ½ÓÊÕÏß³ÌÀà£¬ÓÃÓÚ½ÓÊÕ¿Í»§¶Ë·¢ËÍµÄÏûÏ¢
+# æ¥æ”¶çº¿ç¨‹ç±»ï¼Œç”¨äºæ¥æ”¶å®¢æˆ·ç«¯å‘é€çš„æ¶ˆæ¯
 class UdpReceiver(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
@@ -32,7 +33,7 @@ class UdpReceiver(threading.Thread):
                 
     def run(self):
         while not self.thread_stop:
-            # ÉùÃ÷È«¾Ö±äÁ¿£¬½ÓÊÕÏûÏ¢ºó¸ü¸Ä
+            # å£°æ˜å…¨å±€å˜é‡ï¼Œæ¥æ”¶æ¶ˆæ¯åæ›´æ”¹
             global cli_address   
             global is_sending
             try:
@@ -53,7 +54,8 @@ class UdpReceiver(threading.Thread):
     def stop(self):
         self.thread_stop = True
 
-# ´´½¨½ÓÊÕÏß³Ì
+
+# åˆ›å»ºæ¥æ”¶çº¿ç¨‹
 
 
     
@@ -75,7 +77,7 @@ if __name__=='__main__':
     shots = 0
     
     receiveThread = UdpReceiver()
-    receiveThread.setDaemon(True)           # ¸ÃÑ¡ÏîÉèÖÃºóÊ¹µÃÖ÷Ïß³ÌÍË³öºó×ÓÏß³ÌÍ¬Ê±ÍË³ö
+    receiveThread.setDaemon(True)           # è¯¥é€‰é¡¹è®¾ç½®åä½¿å¾—ä¸»çº¿ç¨‹é€€å‡ºåå­çº¿ç¨‹åŒæ—¶é€€å‡º
     receiveThread.start()
     
 
