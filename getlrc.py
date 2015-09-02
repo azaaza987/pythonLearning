@@ -15,8 +15,8 @@ import os
 reload(sys) 
 sys.setdefaultencoding('utf8')
 
-#music_path = r"F:\CloudMusic"
-music_path=r'e:\music'
+music_path = r"F:\CloudMusic"
+#music_path=r'e:\music'
 lrc_path = r"e:\lrc"
 
 #os.remove('nolrc.txt')
