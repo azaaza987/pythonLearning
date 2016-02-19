@@ -15,7 +15,7 @@ sys.setdefaultencoding('utf-8')
 
 
 
-class RssSpider():
+class OSCRssSpider():
     def __init__(self):
         self.myrss = PyRSS2Gen.RSS2(title='OSChina',
                                     link='http://my.oschina.net',
@@ -74,6 +74,6 @@ class RssSpider():
 
 
 if __name__=='__main__':
-    rssSpider=RssSpider()
+    rssSpider=OSCRssSpider()
     rssSpider.getcontent()
     rssSpider.SaveRssFile('oschina.xml')
