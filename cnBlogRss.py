@@ -70,4 +70,4 @@ class cnBlogRss():
 if __name__ == '__main__':
     rss = cnBlogRss()
     rss.getitems()
-    rss.SaveRssFile('cnblog.xml')
+    rss.SaveRssFile('/var/www/wordpress/cnblog.xml')
