@@ -5,7 +5,7 @@
 """
 @version: ??
 @author: liangliang
-@license: Apache Licence 
+@license: Apache Licence
 @contact: liangliangyy@gmail.com
 @site: http://www.lylinux.org
 @software: PyCharm
@@ -45,21 +45,21 @@ class cnBlogRss():
         feed = feedparser.parse(self.baseurl)
         for entity in feed.entries:
             print(entity.link)
-            url = entity.link
-
-            html=self.useragent(url)
-
-            soup=BeautifulSoup(html)
-            postbody=soup.find('div',id='cnblogs_post_body')
-
-            #published
-            rss=PyRSS2Gen.RSSItem(
-                title=soup.title.string,
-                link=url,
-                description = str(postbody),
-                pubDate = entity.published
-            )
-            self.myrss.items.append(rss)
+            try:
+                url = entity.link
+                html=self.useragent(url)
+                soup=BeautifulSoup(html)
+                postbody=soup.find('div',id='cnblogs_post_body')
+                #published
+                rss=PyRSS2Gen.RSSItem(
+                    title=soup.title.string,
+                    link=url,
+                    description = str(postbody),
+                    pubDate = entity.published
+                )
+                self.myrss.items.append(rss)
+            except Exception as e:
+                pass 
 
     def SaveRssFile(self,filename):
         finallxml=self.myrss.to_xml(encoding='utf-8')
@@ -71,3 +71,4 @@ if __name__ == '__main__':
     rss = cnBlogRss()
     rss.getitems()
     rss.SaveRssFile('/var/www/wordpress/cnblog.xml')
+
