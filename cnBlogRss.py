@@ -34,41 +34,43 @@ class cnBlogRss():
                                     items=[]
                                     )
         self.baseurl = "http://feed.cnblogs.com/blog/sitehome/rss"
-    def useragent(self,url):
+
+    def useragent(self, url):
         i_headers = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) \
     AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36", \
-    "Referer": 'http://baidu.com/'}
+                     "Referer": 'http://baidu.com/'}
         req = urllib2.Request(url, headers=i_headers)
-        html = urllib2.urlopen(req).read()
+        html = urllib2.urlopen(req, timeout=20).read()
         return html
+
     def getitems(self):
         feed = feedparser.parse(self.baseurl)
         for entity in feed.entries:
             print(entity.link)
             try:
                 url = entity.link
-                html=self.useragent(url)
-                soup=BeautifulSoup(html)
-                postbody=soup.find('div',id='cnblogs_post_body')
-                #published
-                rss=PyRSS2Gen.RSSItem(
+                html = self.useragent(url)
+                soup = BeautifulSoup(html)
+                postbody = soup.find('div', id='cnblogs_post_body')
+                # published
+                rss = PyRSS2Gen.RSSItem(
                     title=soup.title.string,
                     link=url,
-                    description = str(postbody),
-                    pubDate = entity.published
+                    description=str(postbody),
+                    pubDate=entity.published
                 )
                 self.myrss.items.append(rss)
             except Exception as e:
-                pass 
+                pass
 
-    def SaveRssFile(self,filename):
-        finallxml=self.myrss.to_xml(encoding='utf-8')
-        file=open(filename,'w')
+    def SaveRssFile(self, filename):
+        finallxml = self.myrss.to_xml(encoding='utf-8')
+        file = open(filename, 'w')
         file.writelines(finallxml)
         file.close()
+
 
 if __name__ == '__main__':
     rss = cnBlogRss()
     rss.getitems()
     rss.SaveRssFile('/var/www/wordpress/cnblog.xml')
-
