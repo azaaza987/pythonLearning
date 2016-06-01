@@ -44,7 +44,7 @@ class cnBlogRss():
     AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36", \
                      "Referer": 'http://baidu.com/'}
         req = urllib2.Request(url, headers=i_headers)
-        html = urllib2.urlopen(req, timeout=20).read()
+        html = urllib2.urlopen(req, timeout=100).read()
         return html
 
     def getitems(self):
