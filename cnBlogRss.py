@@ -54,6 +54,7 @@ class cnBlogRss():
             try:
                 url = entity.link
                 html = self.useragent(url)
+                print 'start parse ' + entity.link
                 soup = BeautifulSoup(html)
                 postbody = soup.find('div', id='cnblogs_post_body')
                 # published
