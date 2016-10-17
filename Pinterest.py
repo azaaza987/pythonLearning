@@ -27,7 +27,7 @@ import redis
 
 class RedisHelper():
     def __init__(self):
-        self.__redis__ = redis.Redis(host='127.0.0.1', password='lylinuxRedis')
+        self.__redis__ = redis.Redis(host='127.0.0.1')
 
     def sset(self, key, obj):
         value = json.dumps(obj)
@@ -47,7 +47,7 @@ class Pinterest():
     def __downimg__(self, imgurl):
         response = requests.get(imgurl, stream=True)
         if response.status_code == 200:
-            with open(u'/var/www/images/pinterest' + '/' + imgurl[-31:], 'wb') as code:
+            with open(u'/vagrant/TestFiles/pinterest' + '/' + imgurl[-31:], 'wb') as code:
                 shutil.copyfileobj(response.raw, code)
 
     def __AddImgUrl__(self, url):

@@ -17,6 +17,7 @@ import datetime
 import cv2
 import numpy
 
+import librtmp
 rtmpurl = 'rtmp://192.168.33.11:1935/hls/mystream'
 
 
@@ -28,7 +29,7 @@ rtmpurl = 'rtmp://192.168.33.11:1935/hls/mystream'
 class OpenCVHelper():
     def __init__(self, cascPath=None, isShowFace=True):
         if not cascPath:
-            cascPath = '/usr/local/Cellar/opencv/2.4.13_3/share/OpenCV/haarcascades/haarcascade_frontalface_default.xml'
+            cascPath = '/usr/local/Cellar/opencv/HEAD-9ff63a4_3/share/OpenCV/haarcascades/haarcascade_frontalface_default.xml'
         #创建级联
         #级联就是一个包含了用于人脸检测的数据的XML文件。
         self.faceCascade = cv2.CascadeClassifier(cascPath)
@@ -54,6 +55,7 @@ class OpenCVHelper():
             retval, frame = self.cap.read()
             if (self.isShowFace):
                 faces = self.GetFaces(frame)
+                print faces
                 if len(faces):
                     for (x, y, w, h) in faces:
                         cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
@@ -66,9 +68,22 @@ class OpenCVHelper():
                 break
 
 
+class RTMPClient():
+    def __init__(self):
+        self.rtmpurl=rtmpurl
+    def GetDate(self):
+        client=librtmp.RTMP(rtmpurl)
+        client.connect(None)
+        stream=client.create_stream(0,True)
+        print stream
+
+
 if __name__ == '__main__':
-    helper = OpenCVHelper()
-    helper.Run()
+    #helper = OpenCVHelper()
+    #helper.Run()
+    #pass
+    client=RTMPClient()
+    client.GetDate()
 
 """
 def getFace(frame):

@@ -13,6 +13,7 @@
 @time: 2016/6/2 22:40
 """
 
+"""
 from gevent.queue import Queue
 import gevent
 message_queue = Queue()
@@ -36,4 +37,7 @@ gevent.joinall([
     gevent.spawn(receiver, 'john'),
     gevent.spawn(receiver, 'nancy'),
     ])
+"""
 
+
+import eyed3
