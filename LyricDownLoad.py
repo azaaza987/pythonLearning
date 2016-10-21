@@ -37,6 +37,8 @@ class Base():
     AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36", \
                      "Referer": 'http://baidu.com/'}
         rsp = requests.get(url, headers=i_headers)
+        #print rsp.encoding
+        rsp.encoding = rsp.apparent_encoding
         return rsp.text
 
 
@@ -90,20 +92,46 @@ class LyricTools():
 class BaiDuMusic(Base):
     def __init__(self, name, artiist):
         Base.__init__(self, name, artiist)
+    def CheckLyric(self,url):
+        html=self.useragent(url)
+        soup=BeautifulSoup(html)
+        titlespan=soup.find("span",{"class":"name"})
+        authspan=soup.find("span",{"class":"author_list"})
+        import chardet
+        print  chardet.detect(str(titlespan.text))
+        print str(titlespan.text)==self.name
 
+        print str(authspan['title']).decode('gb18030').encode('utf-8')
     def Search(self):
         requrl = 'http://music.baidu.com/search?key=' + self.name + '+' + self.artist
-        print requrl
+
         rsp = self.useragent(requrl)
+        with open('text.txt','w') as file:
+            file.writelines(rsp)
         soup = BeautifulSoup(rsp)
         div = soup.find("div", {"monkey": "result-song"})
         if div is not None:
-            self.havelrc = True
+
             ul = div.find('ul')
+
             for li in ul.findAll('li'):
                 a = li.find('a')
                 url = 'http://music.baidu.com/' + a.get('href')
-                return url
+
+                titleem= li.find('em')
+                authorli=li.find('span',{"class":"author_list"})
+                if authorli and titleem:
+                    authorem=authorli.find('em')
+                    if authorem:
+                        author=authorem.text
+                        #print author
+                        title=titleem.text
+                        #print title
+                        if author and  title:
+                            if self.artist==author and self.name==title:
+                                self.havelrc=True
+                                return url
+        return None
 
     def GetLyric(self, lyricUrl):
         if self.havelrc and lyricUrl != '':
@@ -243,6 +271,7 @@ class MusicTools():
 
 
 if __name__ == '__main__':
+
     for root, dirs, files in os.walk(musicpath):
         for filepath in files:
             the_path = os.path.join(root, filepath)
@@ -254,6 +283,7 @@ if __name__ == '__main__':
                 tool = MusicTools()
                 lyric = tool.GetLyric(title, artiist=artist)
                 if lyric:
+                    print "get lyric!!!!!!!!!"
                     lyric = lyric.decode('utf8')
                     lyric = u''.join(lyric)
                     lyric = unicode(lyric)
@@ -264,20 +294,23 @@ if __name__ == '__main__':
                     music.tag.save()
                 #print lyric
     print 'the end!'
-    # name = "阴天快乐"
-    # artiist = "陈奕迅"
+    """
+    print 'the end!'
+    name = "阴天快乐"
+    artiist = "陈奕迅"
     # xiami = XiaMiLrc(name, artiist)
     # url = xiami.Search()
     # lyric = xiami.GetLyric(url)
     # print lyric
     # ttpod=TTpodLyric(name,artiist)
     # lyric=ttpod.GetLyric()
-    """
+
     baidu = BaiDuMusic(name, artiist)
     url = baidu.Search()
     lyric = baidu.GetLyric(url)
 
-    """
+
     # parser = LyricTools(lyric=lyric)
     # data = parser.parseLyric()
     # print data
+    """
