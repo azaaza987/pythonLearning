@@ -22,12 +22,19 @@ import sys
 import feedparser
 from CommonHelper import *
 
+from  gevent import monkey, Greenlet
+
+monkey.patch_all()
+import gevent
+from gevent.pool import Pool
+
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
 
 class cnBlogRss():
     def __init__(self):
+        self.__pool__ = Pool()
         self.myrss = PyRSS2Gen.RSS2(title='博客园',
                                     link='http://www.cnblogs.com/',
                                     description=str(datetime.date.today()),
@@ -47,26 +54,29 @@ class cnBlogRss():
         html = urllib2.urlopen(req, timeout=100).read()
         return html
 
+    def download(self, entity):
+        try:
+            url = entity.link
+            html = self.useragent(url)
+            soup = BeautifulSoup(html)
+            postbody = soup.find('div', id='cnblogs_post_body')
+
+            rss = PyRSS2Gen.RSSItem(
+                title=soup.title.string,
+                link=url,
+                description=str(postbody),
+                pubDate=entity.published
+            )
+            self.myrss.items.append(rss)
+        except:
+            pass
+
     def getitems(self):
         feed = feedparser.parse(self.baseurl)
         for entity in feed.entries:
             print(entity.link)
-            try:
-                url = entity.link
-                html = self.useragent(url)
-                print 'start parse ' + entity.link
-                soup = BeautifulSoup(html)
-                postbody = soup.find('div', id='cnblogs_post_body')
-                # published
-                rss = PyRSS2Gen.RSSItem(
-                    title=soup.title.string,
-                    link=url,
-                    description=str(postbody),
-                    pubDate=entity.published
-                )
-                self.myrss.items.append(rss)
-            except Exception as e:
-                pass
+            self.__pool__.spawn(self.download, entity)
+        self.__pool__.join()
 
     def SaveRssFile(self, filename):
         finallxml = self.myrss.to_xml(encoding='utf-8')
