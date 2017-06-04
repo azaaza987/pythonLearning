@@ -40,4 +40,3 @@ gevent.joinall([
 """
 
 
-import eyed3

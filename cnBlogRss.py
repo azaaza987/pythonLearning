@@ -30,6 +30,10 @@ from gevent.pool import Pool
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
+from gevent import Timeout
+seconds = 360
+timeout = Timeout(seconds)
+timeout.start()
 
 
 class cnBlogRss():
@@ -43,7 +47,7 @@ class cnBlogRss():
         httpHandler = urllib2.HTTPHandler(debuglevel=1)
         httpsHandler = urllib2.HTTPSHandler(debuglevel=1)
         opener = urllib2.build_opener(httpHandler, httpsHandler)
-        urllib2.install_opener(opener)
+        #urllib2.install_opener(opener)
         self.baseurl = "http://feed.cnblogs.com/blog/sitehome/rss"
 
     def useragent(self, url):
@@ -51,16 +55,17 @@ class cnBlogRss():
     AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36", \
                      "Referer": 'http://baidu.com/'}
         req = urllib2.Request(url, headers=i_headers)
-        html = urllib2.urlopen(req, timeout=100).read()
+        html = urllib2.urlopen(req, timeout=10).read()
         return html
 
     def download(self, entity):
         try:
             url = entity.link
+            print 'start down %s' % url
             html = self.useragent(url)
             soup = BeautifulSoup(html)
             postbody = soup.find('div', id='cnblogs_post_body')
-
+            print 'start parse %s' % url
             rss = PyRSS2Gen.RSSItem(
                 title=soup.title.string,
                 link=url,
@@ -76,13 +81,19 @@ class cnBlogRss():
         for entity in feed.entries:
             print(entity.link)
             self.__pool__.spawn(self.download, entity)
-        self.__pool__.join()
+        try:
+
+            self.__pool__.join()
+        except:
+            print 'time out'
 
     def SaveRssFile(self, filename):
+        print 'start save'
         finallxml = self.myrss.to_xml(encoding='utf-8')
         file = open(filename, 'w')
         file.writelines(finallxml)
         file.close()
+        print 'save complate'
 
 
 if __name__ == '__main__':

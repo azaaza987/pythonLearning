@@ -47,7 +47,7 @@ class Pinterest():
     def __downimg__(self, imgurl):
         response = requests.get(imgurl, stream=True)
         if response.status_code == 200:
-            with open(u'/vagrant/TestFiles/pinterest' + '/' + imgurl[-31:], 'wb') as code:
+            with open(u'/var/nsa/disk/NoNameDisk/pinterest' + '/' + imgurl[-31:], 'wb') as code:
                 shutil.copyfileobj(response.raw, code)
 
     def __AddImgUrl__(self, url):

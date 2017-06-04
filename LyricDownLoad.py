@@ -23,7 +23,8 @@ import os
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-musicpath = r'/Users/liangliang/Music/music'
+# musicpath = r'/Users/liangliang/Music/'
+musicpath = r'/Users/liangliang/Music/网易云音乐'
 
 
 class Base():
@@ -37,7 +38,7 @@ class Base():
     AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36", \
                      "Referer": 'http://baidu.com/'}
         rsp = requests.get(url, headers=i_headers)
-        #print rsp.encoding
+        # print rsp.encoding
         rsp.encoding = rsp.apparent_encoding
         return rsp.text
 
@@ -92,21 +93,23 @@ class LyricTools():
 class BaiDuMusic(Base):
     def __init__(self, name, artiist):
         Base.__init__(self, name, artiist)
-    def CheckLyric(self,url):
-        html=self.useragent(url)
-        soup=BeautifulSoup(html)
-        titlespan=soup.find("span",{"class":"name"})
-        authspan=soup.find("span",{"class":"author_list"})
+
+    def CheckLyric(self, url):
+        html = self.useragent(url)
+        soup = BeautifulSoup(html)
+        titlespan = soup.find("span", {"class": "name"})
+        authspan = soup.find("span", {"class": "author_list"})
         import chardet
         print  chardet.detect(str(titlespan.text))
-        print str(titlespan.text)==self.name
+        print str(titlespan.text) == self.name
 
         print str(authspan['title']).decode('gb18030').encode('utf-8')
+
     def Search(self):
         requrl = 'http://music.baidu.com/search?key=' + self.name + '+' + self.artist
 
         rsp = self.useragent(requrl)
-        with open('text.txt','w') as file:
+        with open('text.txt', 'w') as file:
             file.writelines(rsp)
         soup = BeautifulSoup(rsp)
         div = soup.find("div", {"monkey": "result-song"})
@@ -118,18 +121,18 @@ class BaiDuMusic(Base):
                 a = li.find('a')
                 url = 'http://music.baidu.com/' + a.get('href')
 
-                titleem= li.find('em')
-                authorli=li.find('span',{"class":"author_list"})
+                titleem = li.find('em')
+                authorli = li.find('span', {"class": "author_list"})
                 if authorli and titleem:
-                    authorem=authorli.find('em')
+                    authorem = authorli.find('em')
                     if authorem:
-                        author=authorem.text
-                        #print author
-                        title=titleem.text
-                        #print title
-                        if author and  title:
-                            if self.artist==author and self.name==title:
-                                self.havelrc=True
+                        author = authorem.text
+                        # print author
+                        title = titleem.text
+                        # print title
+                        if author and title:
+                            if self.artist == author and self.name == title:
+                                self.havelrc = True
                                 return url
         return None
 
@@ -227,7 +230,7 @@ class MusicTools():
         artiist = str(artiist).replace(' ', '')
         while count <= 3:
             # baidu
-            #print name, artist
+            # print name, artist
             count += 1
             if count == 1:
                 print 'baidu'
@@ -292,7 +295,7 @@ if __name__ == '__main__':
                     music.tag.lyrics.set(lyric)
                     # music.tag.lyrics[0].set(mylrcstr)
                     music.tag.save()
-                #print lyric
+                    # print lyric
     print 'the end!'
     """
     print 'the end!'

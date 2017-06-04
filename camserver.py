@@ -17,8 +17,8 @@ is_sending = False
 cli_address = ('', 0)
 
 # 主机地址和端口
-host = 'localhost'
-port = 10218
+host = '192.168.21.120'
+port = 8000
 
 # 初始化UDP socket
 ser_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
