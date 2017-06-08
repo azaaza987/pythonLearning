@@ -23,8 +23,10 @@ import os
 reload(sys)
 sys.setdefaultencoding('utf8')
 
-# musicpath = r'/Users/liangliang/Music/'
-musicpath = r'/Users/liangliang/Music/网易云音乐'
+musicpath = r'/Users/liangliang/Music/'
+
+
+# musicpath = r'/Users/liangliang/Music/网易云音乐'
 
 
 class Base():

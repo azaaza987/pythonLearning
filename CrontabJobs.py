@@ -16,6 +16,7 @@ from  common.text_to_sound import TextToSound
 from common.BaiduAPI import GetWeather
 import datetime
 import os
+import sys
 
 
 def weather_broadcast():
@@ -23,7 +24,7 @@ def weather_broadcast():
     weather = GetWeather('上海')
     d = weather.getweather()
     print(d)
-    t = datetime.datetime.now().strftime('%Y年%m月%d日%H点%m分')
+    t = datetime.datetime.now().strftime('%Y年%m月%d日%H点%M分')
     d = '现在时间是{time},{weather},又是一天新的开始，fuck'.format(time=t, weather=d)
     if not os.path.exists('./temps'):
         os.mkdir('temps')
@@ -34,4 +35,6 @@ def weather_broadcast():
 
 
 if __name__ == '__main__':
-    weather_broadcast()
+    command = sys.argv[1]
+    if command == 'weather':
+        weather_broadcast()

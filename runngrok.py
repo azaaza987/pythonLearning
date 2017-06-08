@@ -16,7 +16,7 @@
 
 import os
 import datetime
-
+from common.PushbulletHelper import PushbullectHelper
 
 def writelog(s):
     with open('runngrok.log', 'a') as file:
@@ -52,7 +52,8 @@ if not server and loc != '':
     os.system('kill -9 ' + loc)
 elif server and loc == '':
     writelog("run loc")
+    PushbullectHelper.sendnote('ngrok','local ngrok start running!!!')
     os.system(
-        'nohup /home/pi/ngrok/linux_arm/ngrok -log=stdout -config=/home/pi/ngrok/ngrok.yml start ssh > /home/pi/ngrok.log & ')
+        'nohup /home/pi/ngrok/linux_arm/ngrok -log=stdout -config=/home/pi/ngrok/ngrok.yml start-all > /home/pi/ngrok.log & ')
 else:
     print 'ok'
