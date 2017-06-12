@@ -19,11 +19,18 @@ import os
 import sys
 import scapy
 import struct
-from scapy.all import *
+import pyping
 import datetime
 
 if not os.path.exists('./temps'):
     os.mkdir('temps')
+
+
+def write_crontab_run_log(s):
+    t = get_time_str()
+    l = t + '  ' + s + '\n'
+    with open('./temps/crontablog.log', 'a') as file:
+        file.write(l)
 
 
 def get_time_str():
@@ -50,49 +57,35 @@ def weather_broadcast():
 
 
 def check_back():
-    ipscan = '192.168.21.0/24'
+    ipscan = '192.168.21.66'
 
     def write_run_log(s):
         with open('./temps/runlog.txt', 'w') as file:
             file.write(s)
 
     def get_run_log():
+        if not os.path.exists('./temps/runlog.txt'):
+            os.system('touch ./temps/runlog.txt ')
         with open('./temps/runlog.txt', 'r') as file:
             s = file.readline()
             return s
 
-    try:
-        ans, unans = srp(Ether(dst="F0:99:BF:E8:F9:1F") / ARP(pdst=ipscan), timeout=20, iface='eth0', verbose=False)
-    except Exception, e:
-        print str(e)
-    else:
-        """
-        for snd, rcv in ans:
-            s = get_run_log()
-            print s
-            if s == '1':
-                return
-            else:
-                list_mac = rcv.sprintf("%Ether.src% - %ARP.psrc%")
-                print list_mac
-                d = '欢迎回来，亮亮。'
-                play_sound(d)
-                # list_mac = rcv.sprintf("%Ether.src% - %ARP.psrc%")
-                # print list_mac
-        """
-        if ans and len(ans):
-
-            s = get_run_log()
-            print s
-            if s == '1':
-                return
-            d = '欢迎回来，亮亮。'
-            write_run_log('1')
-            play_sound(d)
-
-        else:
-            write_run_log('0')
+    response = pyping.ping(ipscan)
+    if response.ret_code == 0:
+        s = get_run_log()
+        print s
+        if s == '1':
+            write_crontab_run_log('get device not run')
             return
+        d = '欢迎回来，亮亮。'
+        write_run_log('1')
+        write_crontab_run_log('start play')
+        play_sound(d)
+
+    else:
+        write_crontab_run_log('not get')
+        write_run_log('0')
+        return
 
 
 if __name__ == '__main__':
