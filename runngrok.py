@@ -13,10 +13,10 @@
 @time: 2017/5/16 下午10:42
 """
 
-
 import os
 import datetime
 from common.PushbulletHelper import PushbullectHelper
+
 
 def writelog(s):
     with open('runngrok.log', 'a') as file:
@@ -49,10 +49,13 @@ loc = loc_is_run()
 if not server and loc != '':
     writelog('kill local')
     print 'kill local'
+    pb = PushbullectHelper()
+    pb.sendnote('ngrok', 'kill ngrok local ')
     os.system('kill -9 ' + loc)
 elif server and loc == '':
     writelog("run loc")
-    PushbullectHelper.sendnote('ngrok','local ngrok start running!!!')
+    pb = PushbullectHelper()
+    pb.sendnote('ngrok', 'local ngrok start running!!!')
     os.system(
         'nohup /home/pi/ngrok/linux_arm/ngrok -log=stdout -config=/home/pi/ngrok/ngrok.yml start-all > /home/pi/ngrok.log & ')
 else:
