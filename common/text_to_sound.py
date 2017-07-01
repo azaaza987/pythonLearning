@@ -17,9 +17,13 @@ import requests
 import json
 from BaiduAPI import GetWeather
 import datetime
+from urllib import urlencode
+import wave
+import base64
+import json
 
 
-class TextToSound():
+class BaiDuYuYin():
     def __init__(self):
         self.appid = '9718832'
         self.appkey = 'yIPPoy516gjYTaSjy3fqRp11'
@@ -32,6 +36,40 @@ class TextToSound():
         obj = json.loads(s=rsp.text, encoding='utf-8')
         return str(obj['access_token'])
 
+
+class SoundToText(BaiDuYuYin):
+    def convert_to_text(self, path):
+        token = self.get_accesstoken()
+        signal = open(path, "rb").read()
+        speech_length = len(signal)
+        speech = base64.b64encode(signal).decode("utf-8")
+        s = {
+            "format": "wav",
+            'rate': 16000,
+            'channel': 1,
+            'cuid': 'fff',
+            'token': token,
+            'lan': 'zh',
+            'speech': speech,
+            'len': speech_length
+        }
+
+        url = 'http://vop.baidu.com/server_api'
+
+        data_length = len(json.dumps(s).encode("utf-8"))
+
+        headers = {"Content-Type": "application/json",
+                   "Content-Length": str(data_length)}
+        r = requests.post(url, data=json.dumps(s), headers=headers)
+        d = json.loads(r.text)
+        try:
+            print str(d["result"][0])
+            return d["result"][0]
+        except:
+            return "服务器出错。。。"
+
+
+class TextToSound(BaiDuYuYin):
     def convert_to_sound(self, text, path):
         token = self.get_accesstoken()
         s = {
@@ -55,6 +93,9 @@ class TextToSound():
 
 
 if __name__ == '__main__':
+    s = SoundToText()
+    s.convert_to_text('record.wav')
+    """
     s = TextToSound()
     weather = GetWeather('上海')
     d = weather.getweather()
@@ -62,3 +103,4 @@ if __name__ == '__main__':
     t = datetime.datetime.now().strftime('%Y年%m月%d日%H点%m分')
     d = '现在时间是{time},{weather},又是一天新的开始，fuck'.format(time=t, weather=d)
     s.convert_to_sound(d, path='123.mp3')
+    """

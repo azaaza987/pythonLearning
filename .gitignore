@@ -63,3 +63,6 @@ target/
 .idea
 .iml
 temps
+.wav
+*.jpeg
+*.jpg

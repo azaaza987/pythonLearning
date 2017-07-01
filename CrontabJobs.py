@@ -39,12 +39,21 @@ def get_time_str():
 
 
 def play_sound(d):
+    os.system('/home/pi/Linux_voice_1.109/bin/tts_sample {text} /home/pi/temps/sound.wav'.format(text=d))
+    os.system('mplayer /home/pi/temps/sound.wav ')
+    pass
+    """
     s = TextToSound()
 
     n = './temps/123.mp3'
     r = s.convert_to_sound(d, path=n)
     if r:
         os.system(' mplayer {path}'.format(path=n))
+    """
+
+
+def play_voice(path):
+    os.system(' mplayer {path}'.format(path=path))
 
 
 def weather_broadcast():
@@ -52,8 +61,9 @@ def weather_broadcast():
     d = weather.getweather()
 
     t = get_time_str()
-    d = '现在时间是{time},{weather},又是一天新的开始，fuck'.format(time=t, weather=d)
+    d = '现在时间是{time},{weather}'.format(time=t, weather=d)
     play_sound(d)
+    play_voice('/home/pi/voice/morning.m4a')
 
 
 def check_back():
@@ -70,18 +80,20 @@ def check_back():
             s = file.readline()
             return s
 
-    response = pyping.ping(ipscan)
-    if response.ret_code == 0:
+    response = pyping.ping(ipscan, count=10)
+
+    if response and response.avg_rtt and float(response.avg_rtt) >= 1:
+        print response.avg_rtt
         s = get_run_log()
         print s
         if s == '1':
             write_crontab_run_log('get device not run')
             return
-        d = '欢迎回来，亮亮。'
+
         write_run_log('1')
         write_crontab_run_log('start play')
-        play_sound(d)
-
+        path = '/home/pi/voice/back.m4a'
+        play_voice(path)
     else:
         write_crontab_run_log('not get')
         write_run_log('0')
