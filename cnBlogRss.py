@@ -14,23 +14,16 @@
 """
 
 from bs4 import BeautifulSoup
-import urllib2
+
 import datetime
 import PyRSS2Gen
-import re
-import sys
 import feedparser
-from CommonHelper import *
-
-from  gevent import monkey, Greenlet
-
-monkey.patch_all()
-import gevent
+import requests
+from  gevent import monkey, Timeout
 from gevent.pool import Pool
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
-from gevent import Timeout
+monkey.patch_all()
+
 seconds = 360
 timeout = Timeout(seconds)
 timeout.start()
@@ -44,28 +37,25 @@ class cnBlogRss():
                                     description=str(datetime.date.today()),
                                     items=[]
                                     )
-        httpHandler = urllib2.HTTPHandler(debuglevel=1)
-        httpsHandler = urllib2.HTTPSHandler(debuglevel=1)
-        opener = urllib2.build_opener(httpHandler, httpsHandler)
-        #urllib2.install_opener(opener)
+
         self.baseurl = "http://feed.cnblogs.com/blog/sitehome/rss"
 
     def useragent(self, url):
-        i_headers = {"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) \
-    AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36", \
-                     "Referer": 'http://baidu.com/'}
-        req = urllib2.Request(url, headers=i_headers)
-        html = urllib2.urlopen(req, timeout=10).read()
-        return html
+        i_headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36",
+            "Referer": 'http://baidu.com/'}
+        rsp = requests.get(url, headers=i_headers)
+        rsp.encoding = rsp.apparent_encoding
+        return rsp.text
 
     def download(self, entity):
         try:
             url = entity.link
-            print 'start down %s' % url
+
             html = self.useragent(url)
-            soup = BeautifulSoup(html)
+            soup = BeautifulSoup(html, 'lxml')
             postbody = soup.find('div', id='cnblogs_post_body')
-            print 'start parse %s' % url
+
             rss = PyRSS2Gen.RSSItem(
                 title=soup.title.string,
                 link=url,
@@ -82,21 +72,20 @@ class cnBlogRss():
             print(entity.link)
             self.__pool__.spawn(self.download, entity)
         try:
-
             self.__pool__.join()
         except:
-            print 'time out'
+            print('time out')
 
     def SaveRssFile(self, filename):
-        print 'start save'
+        print('start save')
         finallxml = self.myrss.to_xml(encoding='utf-8')
         file = open(filename, 'w')
         file.writelines(finallxml)
         file.close()
-        print 'save complate'
+        print('save complate')
 
 
 if __name__ == '__main__':
     rss = cnBlogRss()
     rss.getitems()
-    rss.SaveRssFile('/var/www/wordpress/cnblog.xml')
+    rss.SaveRssFile('cnblog.xml')

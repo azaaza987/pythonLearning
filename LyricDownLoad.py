@@ -83,6 +83,17 @@ class Base():
     def have_lrc_url(self):
         return self.lrcurl and self.lrcurl != ''
 
+    def check_music_correct(self, checkname, checkartist):
+        def clean(s):
+            result = s.replace(' ', '').replace('-', '').upper()
+            return result
+
+        checkname = clean(checkname)
+        checkartist = clean(checkartist)
+        tempname = clean(self.name)
+        tempartist = clean(self.artist)
+        return checkname == tempname and checkartist == tempartist
+
     @property
     def have_lrc_data(self):
         return self.have_lrc_url and self.lrc
@@ -139,9 +150,8 @@ class BaiDuMusic(Base):
                         author = authorem.text
 
                         title = titleem.text
-
                         if author and title:
-                            if self.artist == author and self.name == title:
+                            if self.check_music_correct(title, artist):
                                 self.lrcurl = url
                                 return url
         return None
@@ -197,7 +207,8 @@ class XiaMiLrc(Base):
                     name = re.sub('<(.*?)>', '', str(s)).replace('\t', '') \
                         .replace('\n', '').replace('MV%20', '').replace("MV", '').replace(' ', '')
                     try:
-                        if self.artist == artist and self.name == name:
+
+                        if self.check_music_correct(name, artist):
                             inputvalue = t.find(['input'])['value']
                             self.havelrc = True
                             requrl = 'http://www.xiami.com/song/playlist/id/' + inputvalue

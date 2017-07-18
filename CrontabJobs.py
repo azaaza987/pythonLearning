@@ -40,7 +40,7 @@ def get_time_str():
 
 def play_sound(d):
     os.system('/home/pi/Linux_voice_1.109/bin/tts_sample {text} /home/pi/temps/sound.wav'.format(text=d))
-    os.system('mplayer /home/pi/temps/sound.wav ')
+    os.system('omxplayer /home/pi/temps/sound.wav ')
     pass
     """
     s = TextToSound()
@@ -48,12 +48,12 @@ def play_sound(d):
     n = './temps/123.mp3'
     r = s.convert_to_sound(d, path=n)
     if r:
-        os.system(' mplayer {path}'.format(path=n))
+        os.system(' omxplayer {path} '.format(path=n))
     """
 
 
 def play_voice(path):
-    os.system(' mplayer {path}'.format(path=path))
+    os.system(' omxplayer {path} '.format(path=path))
 
 
 def weather_broadcast():
