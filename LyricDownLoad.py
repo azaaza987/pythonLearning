@@ -15,12 +15,19 @@
 from bs4 import BeautifulSoup
 import requests
 import eyed3
+import sys
 import re
 import json
 import os
 from abc import ABCMeta, abstractmethod, abstractproperty
+import argparse
 
-musicpath = r'/Users/liangliang/Music/'
+parser = argparse.ArgumentParser()
+parser.add_argument('-p', '--path', help='音乐路径')
+parser.add_argument('--savepath', help='保存歌词文件的路径,默认将歌词写入音乐文件中。')
+args = parser.parse_args()
+musicpath = args.path
+savepath = args.savepath
 
 
 # musicpath = r'/Users/liangliang/Music/网易云音乐'
@@ -265,6 +272,13 @@ class MusicTools():
 
 
 if __name__ == '__main__':
+    if savepath:
+        if not os.path.exists(path=savepath):
+            print('歌词保存路径不存在')
+            sys.exit(0)
+    if not musicpath:
+        print('音乐文件不存在')
+        sys.exit(0)
     for root, dirs, files in os.walk(musicpath):
         for filepath in files:
             the_path = os.path.join(root, filepath)
@@ -279,4 +293,13 @@ if __name__ == '__main__':
                     print(lyric)
                     music.tag.lyrics.set(lyric)
                     music.tag.save()
+                    if savepath:
+                        try:
+                            with open('{savepath}/{artist}-{name}.lrc'
+                                              .format(savepath=savepath, artist=str(artist), name=str(title)), 'w') \
+                                    as lrcfile:
+                                lrcfile.write(lyric)
+                        except Exception as e:
+                            print(e)
+
     print('the end!')
