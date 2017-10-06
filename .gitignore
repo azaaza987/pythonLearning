@@ -67,5 +67,6 @@ temps
 *.jpeg
 *.jpg
 *.txt
+!requirements.txt
 *.lrc
 *.ttc
