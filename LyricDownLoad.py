@@ -21,6 +21,7 @@ import json
 import os
 from abc import ABCMeta, abstractmethod, abstractproperty
 import argparse
+from NeteaseCloudMusicApi.api import *
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-p', '--path', help='音乐路径')
@@ -29,8 +30,7 @@ args = parser.parse_args()
 musicpath = args.path
 savepath = args.savepath
 
-
-# musicpath = r'/Users/liangliang/Music/网易云音乐'
+#musicpath = r'/Users/liangliang/Music/网易云音乐'
 
 
 class LyricTools():
@@ -130,6 +130,32 @@ class Base():
             self.lrcdict = lrcdict
             self.lrc = parser.parse_lyric_dict(lrcdict)
             return self.lrc
+
+
+class NeteaseCloudMusic(Base):
+    SearchType = 'netease'
+
+    def __init__(self, name, artist):
+        super(NeteaseCloudMusic, self).__init__(name, artist)
+        self.netease = NetEase()
+
+    def search_music(self):
+        super(NeteaseCloudMusic, self).search_music()
+
+        result = self.netease.search_by_artists_name(self.name, self.artist)
+        if result:
+            id = result['id']
+            self.lrcurl = id
+            return result
+        return None
+
+    def getlrc_content(self):
+        musicid = self.lrcurl
+        if musicid:
+            lyric = self.netease.song_lyric(musicid)
+            self.lrc = lyric
+            return lyric
+        return None
 
 
 class BaiDuMusic(Base):
