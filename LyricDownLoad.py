@@ -30,7 +30,7 @@ args = parser.parse_args()
 musicpath = args.path
 savepath = args.savepath
 
-#musicpath = r'/Users/liangliang/Music/网易云音乐'
+musicpath = r'/Users/liangliang/Music/Music'
 
 
 class LyricTools():
@@ -58,6 +58,9 @@ class LyricTools():
             lrcres = self.replacetimespan(line, refind)
             for timespan in refind:
                 timespan = timespan.replace('[', '').replace(']', '')
+                l = timespan.split('.')[1]
+                l = l if len(l) <= 2 else l[:2]
+                timespan = timespan.split('.')[0] + '.' + l
                 timelrc[timespan] = lrcres
         return timelrc
 
@@ -312,11 +315,15 @@ if __name__ == '__main__':
                 music = eyed3.load(the_path)
                 artist = music.tag._getArtist()
                 title = music.tag._getTitle()
+                if not artist or not title:
+                    with open('errorread.txt', 'a', encoding='utf-8') as file:
+                        file.write(the_path + '\n')
+                    continue
                 tool = MusicTools()
                 lyric = tool.GetLyric(title, artist)
                 if lyric:
                     print("get lyric!!!!!!!!!")
-                    print(lyric)
+                    # print(lyric)
                     music.tag.lyrics.set(lyric)
                     music.tag.save()
                     if savepath:
@@ -327,5 +334,8 @@ if __name__ == '__main__':
                                 lrcfile.write(lyric)
                         except Exception as e:
                             print(e)
+                else:
+                    with open('nolrc.txt', 'a', encoding='utf-8') as file:
+                        file.write(the_path + '\n')
 
     print('the end!')

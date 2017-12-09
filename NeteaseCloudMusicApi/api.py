@@ -243,7 +243,7 @@ class NetEase():
 
     def search_by_artists_name(self, name, artists):
         results = self.search(name)
-        if (results['result'] and results['result']['songs']):
+        if ('result' in results and results['result'] and 'songs' in results['result'] and results['result']['songs']):
             for s in results['result']['songs']:
                 s_artists = s['artists'][0]['name']
                 if artists == s_artists:
@@ -312,7 +312,7 @@ class NetEase():
             music_id)
         try:
             data = self.httpRequest('GET', action)
-            if 'lrc' in data and data['lrc']['lyric'] is not None:
+            if 'lrc' in data and 'lyric' in data['lrc'] and data['lrc']['lyric'] is not None:
                 lyric_info = data['lrc']['lyric']
             else:
                 lyric_info = '未找到歌词'
