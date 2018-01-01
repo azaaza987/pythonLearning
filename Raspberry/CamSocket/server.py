@@ -17,32 +17,137 @@ import io
 import socket
 import struct
 from PIL import Image
-import cv2
 import numpy
+import io
+import logging
+import socketserver
+from threading import Condition
+from http import server
 
 server_socket = socket.socket()
 server_socket.bind(('0.0.0.0', 8002))
 server_socket.listen(0)
 
 connection = server_socket.accept()[0].makefile('rb')
+
+#
+# try:
+#     while True:
+#
+#         image_len = struct.unpack('<L', connection.read(struct.calcsize('<L')))[0]
+#         print(image_len)
+#         if not image_len:
+#             break
+#
+#         image_stream = io.BytesIO()
+#         image_stream.write(connection.read(image_len))
+#
+#         image_stream.seek(0)
+#         image = Image.open(image_stream)
+#         cv2img = numpy.array(image, dtype=numpy.uint8)
+#         print('Image is %dx%d' % image.size)
+#         image.save('test.jpg')
+#         cv2.imshow('frame', cv2img)
+#         cv2.waitKey(10)
+# finally:
+#     connection.close()
+#     server_socket.close()
+
+
+PAGE = """\
+<html>
+<head>
+<title>picamera MJPEG streaming demo</title>
+</head>
+<body>
+<h1>PiCamera MJPEG Streaming Demo</h1>
+<img src="stream.mjpg" width="640" height="480" />
+</body>
+</html>
+"""
+
+
+class StreamingOutput(object):
+    def __init__(self):
+        self.frame = None
+        self.buffer = io.BytesIO()
+        self.condition = Condition()
+
+    def write(self, buf):
+        if buf.startswith(b'\xff\xd8'):
+            self.buffer.truncate()
+            with self.condition:
+                self.frame = self.buffer.getvalue()
+                self.condition.notify_all()
+            self.buffer.seek(0)
+        return self.buffer.write(buf)
+
+
+class StreamingHandler(server.BaseHTTPRequestHandler):
+    def do_GET(self):
+        if self.path == '/':
+            self.send_response(301)
+            self.send_header('Location', '/index.html')
+            self.end_headers()
+        elif self.path == '/index.html':
+            content = PAGE.encode('utf-8')
+            self.send_response(200)
+            self.send_header('Content-Type', 'text/html')
+            self.send_header('Content-Length', len(content))
+            self.end_headers()
+            self.wfile.write(content)
+        elif self.path == '/stream.mjpg':
+            self.send_response(200)
+            self.send_header('Age', 0)
+            self.send_header('Cache-Control', 'no-cache, private')
+            self.send_header('Pragma', 'no-cache')
+            self.send_header('Content-Type', 'multipart/x-mixed-replace; boundary=FRAME')
+            self.end_headers()
+            try:
+
+                while True:
+
+                    image_len = struct.unpack('<L', connection.read(struct.calcsize('<L')))[0]
+                    print(image_len)
+                    if not image_len:
+                        break
+
+                    image_stream = io.BytesIO()
+                    image_stream.write(connection.read(image_len))
+
+                    image_stream.seek(0)
+                    image = Image.open(image_stream)
+                    cv2img = numpy.array(image, dtype=numpy.uint8)
+                    self.wfile.write(b'--FRAME\r\n')
+                    self.send_header('Content-Type', 'image/jpeg')
+                    self.send_header('Content-Length', len(image_stream.getvalue()))
+                    self.end_headers()
+                    self.wfile.write(image_stream.getvalue())
+                    self.wfile.write(b'\r\n')
+
+
+            except Exception as e:
+                logging.warning(
+                    'Removed streaming client %s: %s',
+                    self.client_address, str(e))
+
+        else:
+            self.send_error(404)
+            self.end_headers()
+
+
+class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
+    allow_reuse_address = True
+    daemon_threads = True
+
+    # camera.led = False
+
+
+output = StreamingOutput()
+
 try:
-    while True:
-
-        image_len = struct.unpack('<L', connection.read(struct.calcsize('<L')))[0]
-        print(image_len)
-        if not image_len:
-            break
-
-        image_stream = io.BytesIO()
-        image_stream.write(connection.read(image_len))
-
-        image_stream.seek(0)
-        image = Image.open(image_stream)
-        cv2img = numpy.array(image, dtype=numpy.uint8)
-        print('Image is %dx%d' % image.size)
-        image.save('test.jpg')
-        cv2.imshow('frame', cv2img)
-        cv2.waitKey(10)
-finally:
-    connection.close()
-    server_socket.close()
+    address = ('127.0.0.1', 8000)
+    server = StreamingServer(address, StreamingHandler)
+    server.serve_forever()
+except Exception as e:
+    print(e)
