@@ -37,7 +37,7 @@ class RedisHelper():
 class Pinterest():
     def __init__(self, token):
         self.__token__ = token
-        self.__pool__ = Pool()
+        self.__pool__ = Pool(10)
         self.__redishelper__ = RedisHelper()
         self.key = 'pinterest'
 

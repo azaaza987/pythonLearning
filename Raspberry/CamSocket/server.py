@@ -21,7 +21,7 @@ import cv2
 import numpy
 
 server_socket = socket.socket()
-server_socket.bind(('0.0.0.0', 8000))
+server_socket.bind(('0.0.0.0', 8002))
 server_socket.listen(0)
 
 connection = server_socket.accept()[0].makefile('rb')
@@ -40,7 +40,7 @@ try:
         image = Image.open(image_stream)
         cv2img = numpy.array(image, dtype=numpy.uint8)
         print('Image is %dx%d' % image.size)
-
+        image.save('test.jpg')
         cv2.imshow('frame', cv2img)
         cv2.waitKey(10)
 finally:
