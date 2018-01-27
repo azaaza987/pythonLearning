@@ -1,5 +1,4 @@
 import datetime
-import json
 import time
 import cv2
 import logging
@@ -11,7 +10,6 @@ motionCounter = 0
 path = os.path.split(os.path.realpath(__file__))[0]
 avg = None
 cap = None
-i = 0
 logfilename = path + '/logger.log'
 logging.basicConfig(filename=logfilename, level=logging.INFO)
 while (1):
@@ -65,12 +63,7 @@ while (1):
         cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
         text = "Occupied"
 
-    # 在当前帧上标记文本和时间戳
-    ts = timestamp.strftime("%A %d %B %Y %I:%M:%S%p")
-    cv2.putText(frame, "Room Status: {}".format(text), (10, 20),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
-    cv2.putText(frame, ts, (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX,
-                0.35, (0, 0, 255), 1)
+
 
     if text == "Occupied":
         if (timestamp - lastSaveTime).seconds >= 3:
@@ -79,8 +72,13 @@ while (1):
             # 判断包含连续运动的帧数是否已经
             # 足够多
             if motionCounter >= 3:
-                filename = path + '/imgs/img_' + str(i) + '.jpg'
-                i += 1
+                # 在当前帧上标记文本和时间戳
+                ts = timestamp.strftime("%A %d %B %Y %I:%M:%S%p")
+                cv2.putText(frame, "Room Status: {}".format(text), (10, 20),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+                cv2.putText(frame, ts, (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX,
+                            0.35, (0, 0, 255), 1)
+                filename = path + '/imgs/img_' + ts + '.jpg'
                 lastSaveTime = timestamp
                 motionCounter = 0
                 cv2.imwrite(filename, frame)
