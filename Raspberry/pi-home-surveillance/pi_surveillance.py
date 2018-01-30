@@ -63,8 +63,6 @@ while (1):
         cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
         text = "Occupied"
 
-
-
     if text == "Occupied":
         if (timestamp - lastSaveTime).seconds >= 3:
             # increment the motion counter
@@ -78,7 +76,10 @@ while (1):
                             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
                 cv2.putText(frame, ts, (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX,
                             0.35, (0, 0, 255), 1)
-                filename = path + '/imgs/img_' + ts + '.jpg'
+                savepath = path + datetime.datetime.now().strftime("/%Y/%m/%d")
+                if not os.path.exists(savepath):
+                    os.makedirs(savepath)
+                filename = savepath + '/img_' + datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") + '.jpg'
                 lastSaveTime = timestamp
                 motionCounter = 0
                 cv2.imwrite(filename, frame)
