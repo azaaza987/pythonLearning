@@ -146,7 +146,7 @@ class StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):
 output = StreamingOutput()
 
 try:
-    address = ('127.0.0.1', 8000)
+    address = ('', 8000)
     server = StreamingServer(address, StreamingHandler)
     server.serve_forever()
 except Exception as e:
