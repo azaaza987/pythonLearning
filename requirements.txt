@@ -3,7 +3,7 @@ certifi==2017.7.27.1
 chardet==3.0.4
 eyeD3==0.8
 idna==2.6
-lxml==4.0.0
+lxml==4.6.2
 pycrypto==2.6.1
 requests==2.18.4
 six==1.11.0
